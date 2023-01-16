@@ -51,10 +51,13 @@
 
 class Student {
     constructor(firstName, lastName, age, email){
-        this.firstName = !firstName? "no Name" : firstName;
-        this.lastName = !lastName? "no Last Name" : lastName;
-        this.age = !age? "No age" : age;
+        this.firstName = firstName? firstName : "unnamed";
+        this.lastName = lastName? lastName : "unnamed";
+        this.age = age;
         this.email = !email? "No Email": email;
+    }
+    getInfo(){
+        return `This is student ${this.firstName} ${this.lastName} age:${this.age} contact email:${this.email}`;
     }
 }
 
