@@ -29,6 +29,7 @@ html {
 .note {
     max-width: 300px;
     border-radius: 8px;
+    background-color: lightcyan;
 }
 
 .note > h3 {

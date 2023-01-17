@@ -12,9 +12,9 @@ class Note {
 function createNote(noteData){
     const newNote = document.createElement("div");
     newNote.className = "note";
-    newNote.style.backgroundColor = noteData.color;
     const noteTitle = document.createElement("h3");
     noteTitle.innerText = noteData.title;
+    noteTitle.style.color = noteData.color;
     newNote.appendChild(noteTitle);
     const prioContainer = document.createElement("div");
     prioContainer.className = `prio-${noteData.priority}`;
