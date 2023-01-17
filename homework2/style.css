@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.notes-center {
+    display: flex;
+    justify-content: center;
+}
+
+.notes-container {
+    padding-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    max-width: 100vw;
+    gap: 5px;
+}
+
+.note {
+    max-width: 300px;
+    border-radius: 8px;
+}
+
+.note > h3 {
+    padding: 8px;
+}
+
+.note > p {
+    padding: 8px;
+}
+
+.prio-low {
+    padding: 4px 8px;
+    background-color: lightgreen;
+}
+
+.prio-medium {
+    padding: 4px 8px;
+    background-color: lightyellow;
+}
+
+.prio-high {
+    padding: 4px 8px;
+    background-color: lightcoral;
+}
+
+#note-form > div {
+    padding: 5px;
+}
