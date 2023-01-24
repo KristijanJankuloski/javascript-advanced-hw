@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sw-table th {
+    padding: 8px;
+}
+
+.sw-table td{
+    padding: 8px;
+    border: solid 1px darkgrey;
+}
+
+.hidden {
+    display: none;
+}
+
+.btn {
+    padding: 8px;
+    margin: 4px 8px;
+    background-color: lightgreen;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: aquamarine;
+}
