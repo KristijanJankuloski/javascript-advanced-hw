@@ -1,0 +1,23 @@
+.nav-logo {
+    width: 200px;
+}
+
+.hero-img {
+    width: 600px;
+}
+
+.img-hover {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: all .3s ease;
+}
+
+.img-hover:hover{
+    background-color: lightgrey;
+    border: 1px solid grey;
+    cursor: pointer;
+}
+
+.hover-page:hover {
+    cursor: pointer;
+}
