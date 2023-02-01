@@ -64,9 +64,9 @@ function createShipsRow(ship){
 }
 
 // PAGINATION
-function createPagination(previous, next, current, callFunc){
+function createPagination(previous, next, current, callBack){
     const pagination = document.createElement("ul");
-    pagination.className = "pagination";
+    pagination.className = "pagination justify-content-center";
     const previousPage = document.createElement("li");
     previousPage.className = "page-item";
     const previousPageLink = document.createElement("span");
@@ -77,7 +77,7 @@ function createPagination(previous, next, current, callFunc){
     pagination.appendChild(previousPage);
     if(previous){
         previousPage.addEventListener('click', () => {
-            callFunc(previous);
+            callBack(previous);
         });
         previousPage.classList.add("hover-page");
     }
@@ -87,7 +87,7 @@ function createPagination(previous, next, current, callFunc){
     // CURRENT PAGE
     const currentPage = document.createElement("li");
     const currentPageText = document.createElement("p");
-    currentPage.className = "page-item";
+    currentPage.className = "page-item active";
     currentPageText.className = "page-link";
     currentPageText.innerText = current;
     currentPage.appendChild(currentPageText);
@@ -102,7 +102,7 @@ function createPagination(previous, next, current, callFunc){
     pagination.appendChild(nextPage);
     if(next){
         nextPage.addEventListener('click', () => {
-            callFunc(next);
+            callBack(next);
         });
         nextPage.classList.add("hover-page");
     }
@@ -137,7 +137,11 @@ function createPeopleTable(list, previous, next, current){
     }
     table.appendChild(tableBody);
     tableContainer.appendChild(table);
-    tableContainer.appendChild(createPagination(previous, next, current, getPeoplePage));
+    tableContainer.appendChild(createPagination(previous, next, current, async url => {
+        const res = await fetch(url);
+        const data = await res.json();
+        createPeopleTable(data.results, data.previous, data.next, url.split('').pop());
+    }));
     container.appendChild(tableContainer);
 }
 
@@ -165,20 +169,12 @@ function createShipsTable(list, previous, next, current){
     }
     table.appendChild(tableBody);
     tableContainer.appendChild(table);
-    tableContainer.appendChild(createPagination(previous, next, current, getShipsPage));
+    tableContainer.appendChild(createPagination(previous, next, current, async url => {
+        const res = await fetch(url);
+        const data = await res.json();
+        createShipsTable(data.results, data.previous, data.next, url.split('').pop());
+    }));
     container.appendChild(tableContainer);
-}
-
-async function getPeoplePage(url){
-    const res = await fetch(url);
-    const data = await res.json();
-    createPeopleTable(data.results, data.previous, data.next, url.split('').pop());
-}
-
-async function getShipsPage(url){
-    const res = await fetch(url);
-    const data = await res.json();
-    createShipsTable(data.results, data.previous, data.next, url.split('').pop());
 }
 
 function parseCapacity(num){
