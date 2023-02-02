@@ -1,3 +1,15 @@
+function parseCapacity(num){
+    if(num === 'n/a'){
+        return 0;
+    }
+    if(num.includes("-")){
+        let temp = num.split("-");
+        num = temp[1];
+    }
+    num = num.replaceAll(",", "");
+    return Number(num);
+}
+
 function createPeopleRow(person){
     const row = document.createElement("tr");
 
@@ -112,81 +124,61 @@ function createPagination(previous, next, current, callBack){
     return pagination;
 }
 
-function createPeopleTable(list, previous, next, current){
-    const container = document.querySelector("#people-col");
+function createTable(response, current, containerName){
+    let list = response.results;
+    let previous = response.previous;
+    let next = response.next;
+    const container = document.querySelector(containerName);
     container.innerHTML = "";
     const tableContainer = document.createElement("div");
     tableContainer.className = "container-fluid";
     const table = document.createElement("table");
     table.classList.add("table", "table-striped");
-    // TABLE HEAD
     const tableHead = document.createElement("thead");
-    tableHead.innerHTML = `<tr>
-    <th scope="col">Name</th>
-    <th scope="col">Height</th>
-    <th scope="col">Mass</th>
-    <th scope="col">Gender</th>
-    <th scope="col">Birth Year</th>
-    <th scope="col">Appearances</th>
-    </tr>`;
-    table.appendChild(tableHead);
-    // TABLE BODY
     const tableBody = document.createElement("tbody");
-    for(let person of list){
-        tableBody.appendChild(createPeopleRow(person));
+    let pagination = {};
+    if(containerName === "#ships-col"){
+        tableHead.innerHTML = `<tr>
+        <th scope="col">Name</th>
+        <th scope="col">Model</th>
+        <th scope="col">Manufacturer</th>
+        <th scope="col">Cost</th>
+        <th scope="col">Max Capacity</th>
+        <th scope="col">Class</th>
+        </tr>`;
+        for(let ship of list){
+            tableBody.appendChild(createShipsRow(ship));
+        }
+        pagination = createPagination(previous, next, current, async url => {
+            const res = await fetch(url);
+            const data = await res.json();
+            createTable(data, url.split('').pop(), "#ships-col");
+        });
     }
+    
+    else if(containerName === "#people-col"){
+        tableHead.innerHTML = `<tr>
+        <th scope="col">Name</th>
+        <th scope="col">Height</th>
+        <th scope="col">Mass</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Birth Year</th>
+        <th scope="col">Appearances</th>
+        </tr>`;
+        for(let person of list){
+            tableBody.appendChild(createPeopleRow(person));
+        }
+        pagination = createPagination(previous, next, current, async url => {
+            const res = await fetch(url);
+            const data = await res.json();
+            createTable(data, url.split('').pop(), "#people-col");
+        });
+    }
+    table.appendChild(tableHead);
     table.appendChild(tableBody);
     tableContainer.appendChild(table);
-    tableContainer.appendChild(createPagination(previous, next, current, async url => {
-        const res = await fetch(url);
-        const data = await res.json();
-        createPeopleTable(data.results, data.previous, data.next, url.split('').pop());
-    }));
+    tableContainer.appendChild(pagination);
     container.appendChild(tableContainer);
-}
-
-function createShipsTable(list, previous, next, current){
-    const container = document.querySelector("#ships-col");
-    container.innerHTML = "";
-    const tableContainer = document.createElement("div");
-    tableContainer.className = "container-fluid";
-    const table = document.createElement("table");
-    table.classList.add("table", "table-striped");
-    // TABLE HEAD
-    const tableHead = document.createElement("thead");
-    tableHead.innerHTML = `<tr>
-    <th scope="col">Name</th>
-    <th scope="col">Model</th>
-    <th scope="col">Manufacturer</th>
-    <th scope="col">Cost</th>
-    <th scope="col">Max Capacity</th>
-    <th scope="col">Class</th>
-    </tr>`;
-    table.appendChild(tableHead);
-    const tableBody = document.createElement("tbody");
-    for(let ship of list){
-        tableBody.appendChild(createShipsRow(ship));
-    }
-    table.appendChild(tableBody);
-    tableContainer.appendChild(table);
-    tableContainer.appendChild(createPagination(previous, next, current, async url => {
-        const res = await fetch(url);
-        const data = await res.json();
-        createShipsTable(data.results, data.previous, data.next, url.split('').pop());
-    }));
-    container.appendChild(tableContainer);
-}
-
-function parseCapacity(num){
-    if(num === 'n/a'){
-        return 0;
-    }
-    if(num.includes("-")){
-        let temp = num.split("-");
-        num = temp[1];
-    }
-    num = num.replaceAll(",", "");
-    return Number(num);
 }
 
 async function personBtnClick(){
@@ -197,7 +189,7 @@ async function personBtnClick(){
     shipsCol.className = "col d-flex justify-content-center";
     shipsCol.innerHTML = `<img src="./img/space-ship.svg" alt="ship" class="img-fluid w-50 p-2 img-hover" id="ship-btn">`;
     document.querySelector("#ship-btn").addEventListener('click', shipBtnClick);
-    createPeopleTable(data.results, data.previous, data.next, 1);
+    createTable(data, 1, "#people-col");
 }
 
 async function shipBtnClick(){
@@ -208,7 +200,7 @@ async function shipBtnClick(){
     peopleCol.className = "col d-flex justify-content-center";
     peopleCol.innerHTML = `<img src="./img/person.svg" alt="person" class="img-fluid w-50 p-2 img-hover" id="person-btn"></img>`;
     document.querySelector("#person-btn").addEventListener('click', personBtnClick);
-    createShipsTable(data.results, data.previous, data.next, 1);
+    createTable(data, 1, "#ships-col");
 }
 
 document.querySelector("#person-btn").addEventListener('click', personBtnClick);
