@@ -61,12 +61,7 @@ function createShipsRow(ship){
     row.appendChild(rowCost);
 
     const rowCapacity = document.createElement("td");
-    if(ship.crew === "unknown" || ship.passengers === "unknown"){
-        rowCapacity.innerText = "unknown";
-    }
-    else{
-        rowCapacity.innerText = parseCapacity(ship.crew) + parseCapacity(ship.passengers);
-    }
+    rowCapacity.innerText = (ship.crew === "unknown" || ship.passengers === "unknown")? "unknown" : parseCapacity(ship.crew) + parseCapacity(ship.passengers);
     row.appendChild(rowCapacity);
 
     const rowClass = document.createElement("td");
