@@ -119,7 +119,7 @@ function createPagination(previous, next, current, callBack){
     return pagination;
 }
 
-function createTable(response, current, containerName){
+function createTable(response, current, containerName, headerContent, creationFunction){
     let list = response.results;
     let previous = response.previous;
     let next = response.next;
@@ -131,44 +131,17 @@ function createTable(response, current, containerName){
     table.classList.add("table", "table-striped");
     const tableHead = document.createElement("thead");
     const tableBody = document.createElement("tbody");
-    let pagination = {};
-    if(containerName === "#ships-col"){
-        tableHead.innerHTML = `<tr>
-        <th scope="col">Name</th>
-        <th scope="col">Model</th>
-        <th scope="col">Manufacturer</th>
-        <th scope="col">Cost</th>
-        <th scope="col">Max Capacity</th>
-        <th scope="col">Class</th>
-        </tr>`;
-        for(let ship of list){
-            tableBody.appendChild(createShipsRow(ship));
-        }
-        pagination = createPagination(previous, next, current, async url => {
-            const res = await fetch(url);
-            const data = await res.json();
-            createTable(data, url.split('').pop(), "#ships-col");
-        });
+    let pagination = document.createElement("ul");
+    pagination.innerHTML = `<li>Error occurred</li>`;
+    tableHead.innerHTML = headerContent;
+    for(let item of list){
+        tableBody.appendChild(creationFunction(item));
     }
-    
-    else if(containerName === "#people-col"){
-        tableHead.innerHTML = `<tr>
-        <th scope="col">Name</th>
-        <th scope="col">Height</th>
-        <th scope="col">Mass</th>
-        <th scope="col">Gender</th>
-        <th scope="col">Birth Year</th>
-        <th scope="col">Appearances</th>
-        </tr>`;
-        for(let person of list){
-            tableBody.appendChild(createPeopleRow(person));
-        }
-        pagination = createPagination(previous, next, current, async url => {
-            const res = await fetch(url);
-            const data = await res.json();
-            createTable(data, url.split('').pop(), "#people-col");
-        });
-    }
+    pagination = createPagination(previous, next, current, async url => {
+        const res = await fetch(url);
+        const data = await res.json();
+        createTable(data, url.split('').pop(), containerName, headerContent, creationFunction);
+    });
     table.appendChild(tableHead);
     table.appendChild(tableBody);
     tableContainer.appendChild(table);
@@ -184,7 +157,14 @@ async function personBtnClick(){
     shipsCol.className = "col d-flex justify-content-center";
     shipsCol.innerHTML = `<img src="./img/space-ship.svg" alt="ship" class="img-fluid w-50 p-2 img-hover" id="ship-btn">`;
     document.querySelector("#ship-btn").addEventListener('click', shipBtnClick);
-    createTable(data, 1, "#people-col");
+    createTable(data, 1, "#people-col", `<tr>
+    <th scope="col">Name</th>
+    <th scope="col">Height</th>
+    <th scope="col">Mass</th>
+    <th scope="col">Gender</th>
+    <th scope="col">Birth Year</th>
+    <th scope="col">Appearances</th>
+    </tr>`, createPeopleRow);
 }
 
 async function shipBtnClick(){
@@ -195,7 +175,14 @@ async function shipBtnClick(){
     peopleCol.className = "col d-flex justify-content-center";
     peopleCol.innerHTML = `<img src="./img/person.svg" alt="person" class="img-fluid w-50 p-2 img-hover" id="person-btn"></img>`;
     document.querySelector("#person-btn").addEventListener('click', personBtnClick);
-    createTable(data, 1, "#ships-col");
+    createTable(data, 1, "#ships-col", `<tr>
+    <th scope="col">Name</th>
+    <th scope="col">Model</th>
+    <th scope="col">Manufacturer</th>
+    <th scope="col">Cost</th>
+    <th scope="col">Max Capacity</th>
+    <th scope="col">Class</th>
+    </tr>`, createShipsRow);
 }
 
 document.querySelector("#person-btn").addEventListener('click', personBtnClick);
