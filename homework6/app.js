@@ -110,4 +110,4 @@ secondStudent.startSubject(secondSubject);
 newStudent.startSubject(secondSubject);
 
 newAcademy.printStudents();
-console.log(newAcademy);
+newAcademy.printSubjects();
