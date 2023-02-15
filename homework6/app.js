@@ -37,6 +37,7 @@ class Academy {
     addSubject(subject){
         if(!(subject instanceof Subject)){
             console.log("Please enter valid subject");
+            return;
         }
         this.subjects.push(subject);
     }
@@ -100,7 +101,9 @@ let newAcademy = new Academy("sedc", new Date("2022-10-01"), new Date("2023-12-0
 let newSubject = new Subject("advanced js", true, newAcademy);
 let secondSubject = new Subject("basic js", true, newAcademy);
 newAcademy.addSubject(newSubject);
+newAcademy.addSubject("Hello Kiko");
 newAcademy.addSubject(secondSubject);
+console.log(newAcademy);
 let newStudent = new Student("Kristijan", "Jankuloski", 25);
 newStudent.startAcademy(newAcademy);
 newStudent.startSubject(newSubject);
